@@ -15,7 +15,13 @@ function Passwords() {
     const [user,setUser] = useState("")
     const [email,setEmail] = useState("")
     const [password,setPassword] = useState("")
-    const Useremail = auth.currentUser.email
+    if (auth.currentUser==null){
+      const Useremail = "admin@gmail.com"
+    }
+    else{
+      const Useremail = auth.currentUser.email
+    }
+    
 
     //Adding New Password
     const handleSubmit = async (event) => {
