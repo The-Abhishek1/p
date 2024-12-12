@@ -82,7 +82,11 @@ function Sidebar() {
         {
          users.filter(user=> user.Email == auth.currentUser.email).map((user)=>{
             return(
-<h3 key={user.id} className="font-bold text-[26px] text-red-600 mt-4">{user.Username}</h3>
+               <div className="flex flex-col gap-3 items-center" key={user.id}>
+<h3  className="font-bold text-[26px] text-red-600 mt-4">{user.Username}</h3>
+<div className="text-[13px] text-center"><h5 className="font-semibold">Email:</h5> {auth.currentUser.email}</div>
+<div className="text-[13px] text-center"><h5 className="font-semibold">UserID:</h5> {auth.currentUser.uid}</div>
+</div>
             )
          })
         }

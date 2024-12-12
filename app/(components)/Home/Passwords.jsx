@@ -1,7 +1,7 @@
 "use client"
 import React, { useState,useEffect } from 'react'
 import { MdOutlineReplayCircleFilled } from "react-icons/md";
-import { db } from '../Firebase/firebase'
+import { db,auth } from '../Firebase/firebase'
 import { doc, collection,addDoc,getDocs,setDoc,deleteDoc } from "firebase/firestore"; 
 
 //Main function
@@ -15,13 +15,14 @@ function Passwords() {
     const [user,setUser] = useState("")
     const [email,setEmail] = useState("")
     const [password,setPassword] = useState("")
+    const Useremail = auth.currentUser.email
 
     //Adding New Password
     const handleSubmit = async (event) => {
       event.preventDefault()
       try{
 
-        const docRef = await addDoc(collection(db, "Passwords"), {
+        const docRef = await addDoc(collection(db, `${Useremail}`), {
           Domain:domain,
           User:user,
           Email:email,
@@ -46,7 +47,7 @@ function Passwords() {
         //UseEffect to retrieve data
         useEffect(() => {
            // Collection Reference
-          const passwordCollectionRef = collection(db, "Passwords");
+          const passwordCollectionRef = collection(db, `${Useremail}`);
           const getPasswords = async () => {
             const data = await getDocs(passwordCollectionRef);
             setPasswords(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
@@ -67,7 +68,7 @@ function Passwords() {
           event.preventDefault()
          
          try{
-          await setDoc(doc(db,"Passwords",updateData),{
+          await setDoc(doc(db,`${Useremail}`,updateData),{
             Domain:domain,
             User:user,
             Email:email,
@@ -87,7 +88,7 @@ function Passwords() {
         const [deletedata,setDeletedata] =  useState("")
         const Deletehandle = async() => {
           try{
-            await deleteDoc(doc(db,"Passwords",deletedata))
+            await deleteDoc(doc(db,`${Useremail}`,deletedata))
             alert("Document is Deleted")
             setRefresh(!refresh)
           }catch(e){
@@ -130,7 +131,7 @@ function Passwords() {
                 <div className="mt-2">
                   <input onChange={(e)=>{
                     setPassword(e.target.value)
-                  }} type="password" min={6} name="password" id="password" required className="block w-full rounded-md bg-white px-3 py-[2px] text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-blue-300 sm:text-sm/6"/>
+                  }} type="password"  min={6} name="password" id="password" required className="block w-full rounded-md bg-white px-3 py-[2px] text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-blue-300 sm:text-sm/6"/>
                 </div>
               </div>
               <div className='flex text-[13px] gap-4 items-center justify-center mt-10'>
@@ -142,22 +143,24 @@ function Passwords() {
           </form> : null
                 }
                 </div>
-    <div className="p-4 justify-center relative px-2 flex flex-col items-center border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
+    <div className="p-4  justify-center relative px-2 flex flex-col items-center border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
     <h1 className="text-center font-bold">Stored Passwords</h1>
-    <MdOutlineReplayCircleFilled onClick={()=>{
+    <button onClick={()=>{
            setRefresh(!refresh)
-         }} className='cursor-pointer absolute right-2 top-2 mt-2' size={20} color='blue' />
+         }} className='cursor-pointer hover:bg-blue-300 absolute right-10 flex items-center gap-2 bg-blue-500 text-white p-2 py-1 rounded-sm text-[13px] top-2 mt-2'>Refresh
+    <MdOutlineReplayCircleFilled   size={15} />
+         </button>
 
-       <div className='mt-10 mxl:flex-col flex justify-between items-center relative gap-20 px-5'>
-        <div className='flex gap-10 border-2 border-dashed p-4'>
-                <ul className="list-none pr-6 border-r-2 border-dashed flex flex-col gap-3 text-[13px] font-semibold">
+       <div className='mt-10  mxl:flex-col flex justify-between items-center relative gap-20 px-5'>
+        <div className='flex  scr gap-10 border-2 border-dashed p-4'>
+                <ul className="list-none py-2 max-h-[250px] [&::-webkit-scrollbar]:w-[6px] [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-red-500 overflow-y-auto pr-6 border-r-2 border-dashed flex flex-col gap-3 text-[13px] font-semibold">
                    {
                     passwords.map((pass)=>{
                       return(
                        <div key={pass.id}>
                       <li  onClick={()=>{
                         setCurrent(pass.Domain)
-                      }} className='bg-slate-100 border-[1px] p-2 cursor-pointer'>{pass.Domain}</li>
+                      }} className='bg-slate-100  border-[1px] p-2 cursor-pointer'>{pass.Domain}</li>
                       </div>)                      
                     })
                    }

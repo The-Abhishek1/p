@@ -40,7 +40,7 @@ function Passwordgen() {
     const[password,setPassword] = useState("")
 
   return (
-    <div className="p-4 sm:ml-64">
+    <div className="p-4 pb-20 sm:ml-64">
    <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
       <div className="flex flex-col items-center gap-10">
          <h1 className="text-center font-bold">Password Generator</h1>
